@@ -1,0 +1,4 @@
+repository "Theme Park Simulation@MNHazim0910@cloud"
+  path "/"
+    br "/main"
+    co "/main"

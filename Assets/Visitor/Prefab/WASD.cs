@@ -2,9 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class WASD: MonoBehaviour
+public class WanderingVisitor : MonoBehaviour
 {
     public NavMeshAgent agent;
+
+    private bool isLeaving = false;
 
     void Start()
     {
@@ -13,8 +15,17 @@ public class WASD: MonoBehaviour
 
     void Update()
     {
-        // If not in the queue, wander around
-        WanderAround();
+        // If the visitor is leaving, check if they reached the spawn location
+        if (isLeaving && !agent.pathPending && agent.remainingDistance < agent.stoppingDistance)
+        {
+            Destroy(gameObject);
+        }
+
+        // Wander around if not leaving
+        if (!isLeaving)
+        {
+            WanderAround();
+        }
     }
 
     IEnumerator StopMovingAfterDelay(float delay)
@@ -44,7 +55,7 @@ public class WASD: MonoBehaviour
 
     IEnumerator Wander()
     {
-        while (true)
+        while (!isLeaving)
         {
             // Wait for a random duration before setting a new destination
             yield return new WaitForSeconds(Random.Range(3f, 10f));
@@ -52,5 +63,41 @@ public class WASD: MonoBehaviour
             // Set a new random destination
             WanderAround();
         }
+    }
+
+    public void LeavePark(Vector3 leaveDestination)
+    {
+        StartCoroutine(LeaveAfterDelay(leaveDestination));
+    }
+
+    IEnumerator LeaveAfterDelay(Vector3 leaveDestination)
+    {
+        yield return new WaitForSeconds(Random.Range(10f, 20f)); // Adjust the leave delay as needed
+
+        // Set the destination to leave the park
+        agent.SetDestination(leaveDestination);
+
+        // Optionally: Disable other components (e.g., scripts, renderers) to make the visitor "disappear"
+        // Disable any renderer or script that makes the visitor visible or active.
+        // For example: gameObject.GetComponent<Renderer>().enabled = false;
+
+        // Wait until the visitor reaches the destination before destroying
+        while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+        {
+            yield return null;
+        }
+
+        // Destroy the visitor object
+        Destroy(gameObject);
+    }
+
+
+    public void ReturnToSpawn(Vector3 spawnLocation)
+    {
+        // Set the destination to return to the spawn location
+        agent.SetDestination(spawnLocation);
+
+        // Mark the visitor as leaving
+        isLeaving = true;
     }
 }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2745207060695240051}
   - component: {fileID: 3284703155830874314}
   - component: {fileID: -7946777802153208398}
+  - component: {fileID: 5473534286458775534}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Visitor
@@ -144,3 +145,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 3284703155830874314}
+--- !u!114 &5473534286458775534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6704221063622097346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49298e4fd10543f48ab580906ef227bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1001 &11487566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1829,6 +1830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1001 &122769405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2713,6 +2715,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b243bd0f93c184c92180fb9e73a5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentPrefab: {fileID: 2621498807929149684, guid: 803920f96dc28d042910e3ddf41cbb2a, type: 3}
+  startingCount: 3
+  driveFactor: 10
+  maxSpeed: 5
+  neighRadius: 1.5
 --- !u!4 &147007185
 Transform:
   m_ObjectHideFlags: 0
@@ -5308,6 +5315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1 &341276231 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5266852111044191252, guid: 27f1018840b86d143804e741de360a06, type: 3}
@@ -9581,6 +9589,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 4088832}
 --- !u!1001 &685650101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17605,6 +17616,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 120590233}
 --- !u!1001 &1399549074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18653,6 +18667,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 1591799812}
 --- !u!1001 &1521026561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19631,6 +19648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1001 &1597295897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21286,6 +21304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1001 &1734854407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21452,6 +21471,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 335105546}
 --- !u!1001 &1750450406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21721,6 +21743,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 1734815029}
 --- !u!1001 &1800976205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23698,6 +23723,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mean: 0
+  std: 0
+  customers: {fileID: 2022408260}
 --- !u!1001 &1959370937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24644,8 +24672,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a83c43a959778d41bf7179c9481ab80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  queuePositionPrefab: {fileID: 0}
-  queueJoinDistance: 1.5
 --- !u!1001 &2006786206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24856,6 +24882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7624e363577ee4d912a0de5a5b4cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  queueList: {fileID: 11400000, guid: d417f8dab8198f045bf4ff2bf7b80d63, type: 2}
 --- !u!1001 &2024541090
 PrefabInstance:
   m_ObjectHideFlags: 0

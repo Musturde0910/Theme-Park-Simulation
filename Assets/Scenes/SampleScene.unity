@@ -2716,9 +2716,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 2621498807929149684, guid: 803920f96dc28d042910e3ddf41cbb2a, type: 3}
-  startingCount: 3
+  startingCount: 30
   driveFactor: 10
-  maxSpeed: 5
+  maxSpeed: 15.4
   neighRadius: 1.5
 --- !u!4 &147007185
 Transform:
@@ -9589,7 +9589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 4
   std: 0
   customers: {fileID: 4088832}
 --- !u!1001 &685650101
@@ -17616,7 +17616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 4
   std: 0
   customers: {fileID: 120590233}
 --- !u!1001 &1399549074
@@ -18667,7 +18667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 3
   std: 0
   customers: {fileID: 1591799812}
 --- !u!1001 &1521026561
@@ -21471,7 +21471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 4
   std: 0
   customers: {fileID: 335105546}
 --- !u!1001 &1750450406
@@ -21743,7 +21743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 5
   std: 0
   customers: {fileID: 1734815029}
 --- !u!1001 &1800976205
@@ -23723,7 +23723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 0
+  mean: 4
   std: 0
   customers: {fileID: 2022408260}
 --- !u!1001 &1959370937

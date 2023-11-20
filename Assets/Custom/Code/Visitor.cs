@@ -13,7 +13,7 @@ public class Visitor : MonoBehaviour
     [Range(0f, 5f)]
     public float stdHappy = 1f;
 
-    float HappyValue;
+    public float HappyValue;
 
     [Range(1, 99)]
     public int percentageTimid = 50;

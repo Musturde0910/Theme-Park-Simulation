@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
+using TMPro; // Make sure to include this namespace
+
 
 public class Crowd : MonoBehaviour
 {
+    public TextMeshProUGUI textclock;
+    public TextMeshProUGUI nbvisitor;
+    public TextMeshProUGUI happyness;
 
     [Range(1f, 10f)]
     public float meanHappy = 5f;
@@ -63,17 +69,31 @@ public class Crowd : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        nbvisitor.text= startingCount.ToString();
         lastUpdate += Time.deltaTime;
         if (lastUpdate > updateRate) {
             clock++;
+            int nb_hour= (int)Math.Floor((double) clock / 60);
+            textclock.text = "Time "+(nb_hour).ToString()+":"+(clock-(nb_hour*60)).ToString();
             lastUpdate=0;
-            return;
-        }
+            float result=calculatehappyness();
+            happyness.text= "Satisfaction : "+result.ToString();
 
+        }
+        
         if(clock>timesimulation){
             Debug.Log("finish");
         }
         
     }
 
+
+
+    float calculatehappyness(){
+        float total=0;
+        foreach (Visitor v in crowd){
+            total+=v.HappyValue;
+        }
+        return (float)Math.Floor(total*10/crowd.Count)/10;
+    }
 }

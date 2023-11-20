@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Queue
+  - Adventurous
+  - Timid
+  - VisitorTimid
+  - VisitorAdventurous
   layers:
   - Default
   - TransparentFX

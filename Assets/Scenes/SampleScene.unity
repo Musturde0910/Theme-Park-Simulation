@@ -18350,11 +18350,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4414f6fb67a9b5d4a885199b5a254290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mean: 3
+  mean: 5
   std: 0
   customers: {fileID: 1591799812}
-  capacityWagon: 3
-  wagon: 1
+  capacityWagon: 7
+  wagon: 2
 --- !u!1001 &1521026561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19203,7 +19203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4821558035027758, guid: a1307b4a91e909948b68d1c68fb89817, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 194.43
+      value: 194.19
       objectReference: {fileID: 0}
     - target: {fileID: 4821558035027758, guid: a1307b4a91e909948b68d1c68fb89817, type: 3}
       propertyPath: m_LocalPosition.y

@@ -39,27 +39,12 @@ public class Crowd : MonoBehaviour
     long time;
     float lastUpdate;
     int clock;
+    int lasthour=0;
     
     // Start is called before the first frame update
     void Start()
     {
-        GameObject ground = GameObject.Find("Cube (6)");
-        Vector3 grounddim = ground.transform.localScale;
-        Vector3 groundpos = ground.transform.position;
-        float y = groundpos.y + grounddim.y/2;
-
-        while (crowd.Count < startingCount) {
-            var x = UnityEngine.Random.Range(groundpos.x-grounddim.x/2, groundpos.x+grounddim.x/2);
-            var z = UnityEngine.Random.Range(groundpos.z-grounddim.z/2, groundpos.z+grounddim.z/2);
-            Vector3 spawnPos = new Vector3(x, y, z);
-
-            Visitor agent = Instantiate(agentPrefab, 
-                                    spawnPos,
-                                     Quaternion.identity);
-            agent.name = "Agent-"+crowd.Count;            
-            crowd.Add(agent);
-            
-        }
+        createcrowd();
 
         prev = DateTime.Now;
         lastUpdate = 0;
@@ -74,6 +59,12 @@ public class Crowd : MonoBehaviour
         if (lastUpdate > updateRate) {
             clock++;
             int nb_hour= (int)Math.Floor((double) clock / 60);
+            if(nb_hour>lasthour){
+                int newvisitor =UnityEngine.Random.Range(3, 7);
+                startingCount+=newvisitor;
+                createcrowd();
+                lasthour=nb_hour;
+            }
             textclock.text = "Time "+(nb_hour).ToString()+":"+(clock-(nb_hour*60)).ToString();
             lastUpdate=0;
             float result=calculatehappyness();
@@ -96,4 +87,25 @@ public class Crowd : MonoBehaviour
         }
         return (float)Math.Floor(total*10/crowd.Count)/10;
     }
+
+    void createcrowd(){
+        GameObject ground = GameObject.Find("Cube (6)");
+        Vector3 grounddim = ground.transform.localScale;
+        Vector3 groundpos = ground.transform.position;
+        float y = groundpos.y + grounddim.y/2;
+        while (crowd.Count < startingCount) {
+            var x = UnityEngine.Random.Range(groundpos.x-grounddim.x/2, groundpos.x+grounddim.x/2);
+            var z = UnityEngine.Random.Range(groundpos.z-grounddim.z/2, groundpos.z+grounddim.z/2);
+            Vector3 spawnPos = new Vector3(x, y, z);
+
+            Visitor agent = Instantiate(agentPrefab, 
+                                    spawnPos,
+                                     Quaternion.identity);
+            agent.name = "Agent-"+crowd.Count;            
+            crowd.Add(agent);
+            
+        }
+
+    }
+
 }

@@ -12,14 +12,14 @@ public class VisitorQueue : MonoBehaviour
     Vector3 qdir;  // queue direction
     Vector3 qPos;
     Visitor incomingVisitor;
-    float queueSpacing = 1;
+    float queueSpacing = 2;
   
 
     // Start is called before the first frame update
     void Start()
     {
         qdir = transform.forward; // the blue (z) vector
-        qPos = transform.position + qdir*(agentqueue.Count+1)*queueSpacing;
+        qPos = transform.position + qdir*(agentqueue.Count+2)*queueSpacing;
         queueList.Add(this);
 
         Debug.Log("Queue created for "+gameObject.name+". With pos: "+qPos);
@@ -46,13 +46,13 @@ public class VisitorQueue : MonoBehaviour
     }
 
     public Visitor Pop() {
-        Visitor agent = agentqueue[0];
-        agentqueue.RemoveAt(0); 
-        agent.MoveFromQueue();
-
-        agent.SetRandomDestination();
-        Shift();
-        return agent;  
+        if(queueList.Count()>0){
+            Visitor agent = agentqueue[0];
+            agentqueue.RemoveAt(0); 
+            Shift();
+            return agent;  
+        }
+        return null;
     }
 
     public int Size() {

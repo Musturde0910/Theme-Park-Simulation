@@ -7,82 +7,110 @@ using System;
 
 public class Visitor : MonoBehaviour
 {
+    
+    [Range(1f, 10f)]
+    public float meanHappy = 5f;
+    [Range(0f, 5f)]
+    public float stdHappy = 1f;
 
+    public float HappyValue;
 
+    [Range(1, 99)]
+    public int percentageTimid = 50;
+
+    static string[] possibleTags = {"VisitorAdventurous", "VisitorTimid"};
+    int tagIndex;
+
+    AgentState currState;
     NavMeshAgent navagent;
     public Queue queueList;
 
     System.Random rnd = new System.Random();
 
+    float waitingQueue=0.1f;
+
+
     DateTime motionT;
     Vector3 lastPosition;
-
-    DateTime mouseT;
-    const float mouseTime = 5;
-    AgentState currState;
-    int destinationStall;
+    int destinationRide;
 
     const float neighRadius = 10;
-    GameObject[] stalls; // TODO: make this static/scriptable
+    GameObject[] Adventurous_Ride; 
+    GameObject[] Timid_Ride; 
+    GameObject[] AllRide;
 
     Collider agentCollider;
     public Collider AgentCollider {get { return agentCollider; } }
 
+    DateTime prev;
+    const int updateRate = 1;
+    long time;
+    float lastUpdate;
+
     // Start is called before the first frame update
     void Start()
     {
+        int Index = UnityEngine.Random.Range(0, 100); 
+        if(Index<(100-this.percentageTimid)){
+            this.tagIndex=0;
+        }else{
+            this.tagIndex=1;
+        }
+        this.tag = possibleTags[this.tagIndex];
+        Debug.Log("Created a "+this.tag+" agent");
+        gameObject.tag=tag;
+        
         agentCollider = GetComponent<CapsuleCollider>();
         navagent = GetComponent<NavMeshAgent>();
 
-        GetComponent<Renderer>().material.color = Color.red;
+        if (this.tagIndex == 0) {
+            GetComponent<Renderer>().material.color = Color.red;
+        }
+        else {
+            GetComponent<Renderer>().material.color = Color.blue;
+        }
 
-        // agent chooses to go to a random stall
-        stalls = GameObject.FindGameObjectsWithTag("Queue");
-        Debug.Log("indexlength:"+ stalls.Length);
-        int stall = GetRandomStall();
-        GotoStall(stall);
+
+        // Find all Ride with good tag
+        Adventurous_Ride = GameObject.FindGameObjectsWithTag("Adventurous");
+        Timid_Ride = GameObject.FindGameObjectsWithTag("Timid");
+        AllRide=ConcatenateArrays(Adventurous_Ride, Timid_Ride);
+        Debug.Log("Created a "+this.tag+" agent");
+        int ride = GetNextRide();
+        GotoRide(ride);
         currState = AgentState.Wandering;
+        Normal serviceGaussian = new Normal(meanHappy, stdHappy);
+        this.HappyValue = serviceGaussian.Sample();
+        checkHappyvalue();
+
+        prev=DateTime.Now;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currState == AgentState.InQueue)
-            return;
-
+        time++;
+        lastUpdate += Time.deltaTime;
+        if (currState == AgentState.InQueue){
+            if (lastUpdate > updateRate) {
+                waitingQueue++;
+                lastUpdate=0;
+                return;
+            }
+            return;   
+        }
+        
         if (currState == AgentState.ToQueue) {
             if (ReachedDestination()) {
                 currState = AgentState.InQueue;
+                this.lastUpdate=0;
             }
 
-            return;
-        }
-
-        if (currState == AgentState.FollowingMouse) {
-            if (ReachedDestination()) {
-                currState = AgentState.Wandering;
-            }
-
-            DateTime mouseTNow = DateTime.Now;
-            var diffTime = mouseTNow - mouseT;
-            if (diffTime.Seconds > mouseTime)
-                currState = AgentState.Wandering;
             return;
         }
 
         // currState == Wandering
-
-        if (Input.GetMouseButtonDown(1)) {
-                if (rnd.Next(2) == 0)
-                    return;
-                
-                Ray movePosition = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(movePosition, out var hitInfo)) {
-                    SetDestination(hitInfo.point);
-                    currState = AgentState.FollowingMouse; 
-                    mouseT = DateTime.Now;       
-                }
-            } 
         else {
             if (ReachedDestination(10)) {
                 if (this.name == "Agent-19")
@@ -91,59 +119,86 @@ public class Visitor : MonoBehaviour
 
                 bool joinQ = UnityEngine.Random.value < 1;
                 if (joinQ) {
-                    joinQ = MoveToQueue(destinationStall);
+                    joinQ = MoveToQueue(destinationRide);
                 }
 
                 if (!joinQ ) {
-                    destinationStall = GetRandomStall();
-                    GotoStall(destinationStall);
+                    destinationRide = GetNextRide();
+                    GotoRide(destinationRide);
                     }
                 }
             }
 
     }
 
+    GameObject[] ConcatenateArrays(GameObject[] array1, GameObject[] array2)
+    {
+        GameObject[] result = new GameObject[array1.Length + array2.Length];
+        array1.CopyTo(result, 0);
+        array2.CopyTo(result, array1.Length);
+        return result;
+    }
+
     int GetStall() {
-        return destinationStall;
+        return destinationRide;
     }
-
-    int GetRandomStall() {
-        
-        int index = UnityEngine.Random.Range(0, stalls.Length);        
-        return index;
-    }
-
-    void GotoStall(int index) {
-        SetDestination(RandomStallPos(index));
-    }
-
-    int CheckGangDestination() {
-        List<Visitor> agents = GetNearbyAgents(true);
-        Vector3 center = Vector3.zero;
-        if (agents.Count == 0) {
-            return GetStall();
-        }        
-        
-        int numStalls = stalls.Length;
-        int[] vote = new int[numStalls];
-
-        foreach (Visitor agent in agents) {
-            if (agent.IsInQueue() || agent.MovingToQueue() || agent.MovingToMouse())
-                continue;
-            vote[agent.GetStall()] ++;
-         }
-
-        int max = 0;
-        int index = 0;
-        for (int i=0; i<numStalls; i++) {
-            if (vote[i] > max) {
-                max = vote[i];
-                index = i;
+    public void calculateHappy(int servicetime){
+        double tempValue =1+(-0.5*(time/waitingQueue));
+        if(tempValue<-1){
+            HappyValue--;
+        }else{
+            if(tempValue>1){
+                HappyValue ++;
+            }else{
+                HappyValue+=(float)tempValue;
             }
         }
-
-        return index;
     }
+
+    public int GetNextRide() {
+        if (AllRide.Length==0){
+            Destroy(this);
+
+        }
+        if (tagIndex == 0)
+        {
+            float Index = UnityEngine.Random.Range(0, (2 * Adventurous_Ride.Length) + Timid_Ride.Length);
+
+            if (Index < 2 * Adventurous_Ride.Length)
+            {
+                return (int)Mathf.Floor(Index / 2);
+            }
+            else
+            {
+                return (int)Mathf.Floor((Index - (2 * Adventurous_Ride.Length)) / 2);
+            }
+        }
+        else
+        {
+            float Index = UnityEngine.Random.Range(0, Adventurous_Ride.Length + (2 * Timid_Ride.Length));
+
+            if (Index >= Adventurous_Ride.Length)
+            {
+                return (int)Mathf.Floor((Index - Adventurous_Ride.Length) / 2 + Adventurous_Ride.Length);
+            }
+            else
+            {
+                return (int)Mathf.Floor(Index);
+            }
+        }
+    }
+
+    public void GotoRide(int index) {
+        SetDestination(RandomStallPos(index));
+        if (this.tagIndex == 0) {
+            GetComponent<Renderer>().material.color = Color.red;
+        }
+        else {
+            GetComponent<Renderer>().material.color = Color.blue;
+        }
+        MoveFromQueue();
+    }
+
 
 
     List<Visitor> GetNearbyAgents(bool aliketype) {
@@ -178,12 +233,12 @@ public class Visitor : MonoBehaviour
         return currState == AgentState.InQueue;
     }
 
-    public bool MovingToMouse() {
-        return currState == AgentState.FollowingMouse;
-    }
 
     public bool MoveToQueue(int qindex)
     {
+        if (qindex<0||qindex>queueList.Count()-1){
+            qindex= UnityEngine.Random.Range(0,queueList.Count());
+        }
         VisitorQueue chosenQ = queueList.Get(qindex);
         bool success = chosenQ.Add(this);
         if (!success)
@@ -194,7 +249,7 @@ public class Visitor : MonoBehaviour
 
     public string MoveToQueue()
     {
-        VisitorQueue chosenQ = queueList.Get(0);
+        VisitorQueue chosenQ = queueList.Get(queueList.Count());
         bool success = chosenQ.Add(this);
         if (!success)
             return "None";
@@ -239,7 +294,8 @@ public class Visitor : MonoBehaviour
 
 
     public Vector3 RandomStallPos(int index) {
-        GameObject stall = stalls[index];
+        Debug.Log("Created a "+this.tag+" agent"+index+"total"+AllRide.Length);
+        GameObject stall = AllRide[index];
         Vector3 stalldim = stall.transform.localScale;
         Vector3 stallpos = stall.transform.position;
         float y = transform.position.y;
@@ -255,7 +311,7 @@ public class Visitor : MonoBehaviour
 
     public Vector3 RandomNearPosition() {
 
-        GameObject ground = GameObject.Find("Cube 1 (4)");
+        GameObject ground = GameObject.Find("Cube (6)");
         Vector3 grounddim = ground.transform.localScale;
         Vector3 groundpos = ground.transform.position;
         float y = transform.position.y;
@@ -302,5 +358,13 @@ public class Visitor : MonoBehaviour
 
     public void TurnOnNavMeshAgent() {
         navagent.updatePosition = true;   
+    }
+
+    private void checkHappyvalue(){
+        if (this.HappyValue>10){
+            this.HappyValue=10;
+        }else if (this.HappyValue<0){
+            this.HappyValue=0;
+        }
     }
 }
